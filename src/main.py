@@ -14,30 +14,27 @@ def copy_static_recursive(src, dst):
     
     print(f"Copying from {src} to {dst}")
     
-    os.makedirs(os.path.dirname(dst), exist_ok=True)
-
-    if os.path.exists(dst):
+    
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+    else:
+        
         shutil.rmtree(dst)
-    
-    
-    os.mkdir(dst)
-    
+        os.makedirs(dst)
     
     for item in os.listdir(src):
         src_item = os.path.join(src, item)
         dst_item = os.path.join(dst, item)
         
         if os.path.isfile(src_item):
-            
             print(f"Copying file: {src_item} -> {dst_item}")
             shutil.copy(src_item, dst_item)
         elif os.path.isdir(src_item):
-            
             print(f"Found directory: {src_item}")
             copy_static_recursive(src_item, dst_item)
 
 def main():
-    copy_static_recursive("static", "docs/static")
+    copy_static_recursive("static", "docs")
    
     generate_pages_recursive("content", "template.html", "docs", basepath)
     
